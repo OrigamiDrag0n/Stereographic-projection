@@ -49,8 +49,8 @@ def draw(edges, r, n, h, w, filename):    #Splts each edge into n parts, and mak
         v1 = array(e[0]); v2 = array(e[1]); line = []    #Takes the vertices of the edge; and creates a line object.
         for i in range(n + 1):
             v = (i*v1 + (n - i)*v2)/n                      #A partial point on the line
-            lis.append(tuple(array([h/2, w/2]) + project(rescale(v, r), r)))        #The point, which is now centred with the canvas, is added to the line.
-        draw.line(lis, fill = "Black", width = 5)
+            line.append(tuple(array([h/2, w/2]) + project(rescale(v, r), r)))        #The point, which is now centred with the canvas, is added to the line.
+        draw.line(line, fill = "Black", width = 5)
 
     canvas.save(f"{filename}.jpeg", "JPEG")           #Saves the image
 
@@ -65,12 +65,12 @@ def main(filename, outfilename, angle_function, minimum = 0, maximum = 360, step
     with imageio.get_writer(f'{outfilename}.gif', mode='I') as writer:
         theta = minimum
         while theta <= maximum:
-            draw(*angle_function(theta), rotate, edges), 40, 39, 1000, 1000, f"{outfilename}")
+            draw(rotate(*angle_function(theta), edges), 40, 39, 1000, 1000, f"{outfilename}")
             image = imageio.imread(f'{outfilename}.jpeg')
             writer.append_data(image)
             os.remove(f'{outfilename}.jpeg')
             theta += step
-            print(str(int((theta - minimum)*100/(step*floor((maximum - minimum)/step)))+"% complete", end = "\r")     #Open in terminal for this to work; a progress indicator
+            print(str(int((theta - minimum)*100/(step*floor((maximum - minimum)/step))))+"% complete", end = "\r")    #Open in terminal for this to work; a progress indicator
     print(f"Loading complete. Open {outfilename}.gif")
 
 if __name__ == "__main__":      #Fix the little glitches that happen every so often
